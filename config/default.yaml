@@ -1,26 +1,39 @@
 default_prompt: |
-  I'm looking at a video frame. Can you describe what is shown in this frame? Include any important details about people, objects, text, and setting visible in the frame.
+  [INST] <image>
+  Classify this video frame into exactly one of the following categories. Respond with only the category label.
+
+  Categories and their descriptions:
+  "Bars": "SMPTE bars typically appearing before and/or after a program. Often used as a test and calibration pattern for video signals."
+  "Slate": "Program slate, typically appearing immediately before a program, displaying basic program information."
+  "Slate: Handwritten": "Slate information written by hand with chalk or marker, but not on a clapperboard."
+  "Slate: Clapperboard": "Slate information displayed on a clapperboard."
+  "Slate: Simple digital text": "Slate appearing as text on a digitally-generated display."
+  "Slate: Slate over bars": "Slate information digitally imposed over SMPTE bars."
+  "Slate: Graphical": "Slate information digitally interspersed with graphical elements."
+  "Warning for audience": "A frame displaying information about audience level of sensitive content."
+  "Logo": "Logo, usually of an organization involved, but not a title card."
+  "Opening sequence text": "A frame with text that is part of the opening credits or intro sequence."
+  "Main title card": "Title card displaying the title of the main program."
+  "Chyron for person ID": "Text on the lower third of the screen that identifies the focal person on the screen."
+  "Person focal and chyron; No ID": "Text on the lower third of the screen, along with a focal person, but not identifying that person."
+  "Person focal with extra text": "A frame prominently displaying a single person, with extra text that is not a chyron."
+  "Person focal; No text": "A frame prominently displaying a single person but without text."
+  "Chyron; No single person": "Text on the lower third of the screen, but without a single person most prominent."
+  "Subtitling": "Subtitles burned into the screen image."
+  "Ticker; No chyron": "Text appearing in a ticker or crawler, but without a traditional chyron above it."
+  "Graphical text": "A frame including text arranged or interspersed with graphics."
+  "Text, miscellaneous": "An ordinary frame of a video that includes miscellaneous text."
+  "Filmed text": "Camera footage of prominent, readable text."
+  "Closing credits": "A frame from the closing credits sequence."
+  "Copyright statement": "A frame displaying the rights holder and the year, along with the word 'copyright' or copyright symbol."
+
+  Examine the image carefully and provide the single most appropriate category label. [/INST]
 
 context_config:
-  input_context: "fixed_window"  # Options: "timeframe", "image", "fixed_window"
+  input_context: "fixed_window"  # Options: "timeframe", "timepoint", "fixed_window"
 
   fixed_window:
-    window_duration: 1  # in seconds
-    stride: 5  # in seconds
+    window_duration: 1  # in seconds (captures one frame per second)
+    stride: 1  # in seconds (moves forward by one second each time)
 
-  timeframe:
-    app_uri: "http://apps.clams.ai/slatedetection"
-    label_mapping:
-      "slate": "slate"
-      "non-slate": "default"
-
-custom_prompts:
-  slate: |
-    This is a slate frame from a video. Please analyze it and extract all key information: 
-    - Title of the program
-    - Date of recording
-    - Any identifiers, codes, or numbers
-    - Name of production company or network
-    - Any other textual information visible 
-    
-    Format the information clearly. 
+# This configuration will classify each video frame according to the specified label-description map
